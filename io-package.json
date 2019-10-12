@@ -1,0 +1,76 @@
+{
+    "common": {
+        "name": "tronferno",
+        "version": "0.0.1",
+        "news": {
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "zh-cn": "首次出版"
+            }
+        },
+        "title": "tronferno",
+        "titleLang": {
+            "en": "tronferno",
+            "de": "Tronferno",
+            "ru": "tronferno",
+            "pt": "tronferno",
+            "nl": "tronferno",
+            "fr": "Tronferno",
+            "it": "tronferno",
+            "es": "tronferno",
+            "pl": "tronferno",
+            "zh-cn": "特伦费尔诺"
+        },
+        "desc": {
+            "en": "controll Fernotron shutters with tronferno-device",
+            "de": "Fernotron Rollläden mit Tronferno-Gerät ansteuern",
+            "ru": "управление жалюзи Fernotron с тронферно-приборным устройством",
+            "pt": "controlar persianas Fernotron com dispositivo tronferno",
+            "nl": "bediening Fernotron-rolluiken met tronferno-apparaat",
+            "fr": "contrôler les volets Fernotron avec tronferno-device",
+            "it": "controlla le persiane Fernotron con dispositivo tronferno",
+            "es": "control de persianas Fernotron con dispositivo tronferno",
+            "pl": "kontroluj żaluzje Fernotron za pomocą urządzenia tronferno",
+            "zh-cn": "带tronferno装置的可控Fernotron百叶窗"
+        },
+        "authors": [
+            "Diggen85 <Benny_Stark@live.de>"
+        ],
+        "keywords": [
+            "fernotron",
+            "tronferno",
+            "shutter"
+        ],
+        "license": "GPL-3.0",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "tronferno.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/Diggen85/ioBroker.tronferno/master/admin/tronferno.png",
+        "readme": "https://github.com/Diggen85/ioBroker.tronferno/blob/master/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "hardware",
+        "compact": true,
+        "materialize": true,
+        "dependencies": [
+            {
+                "js-controller": ">=1.4.2"
+            }
+        ]
+    },
+    "native": {
+        "option1": true,
+        "option2": "42"
+    },
+    "objects": [],
+    "instanceObjects": []
+}
