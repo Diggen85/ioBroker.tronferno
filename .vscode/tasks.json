@@ -1,0 +1,26 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558 
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Upload Adpater Files",
+            "type": "shell",
+            "command": "sudo",
+            "args": [
+                "iobroker",
+                "upload",
+                "tronferno"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "echo": true,
+                "showReuseMessage": true
+            }
+        }
+    ]
+}

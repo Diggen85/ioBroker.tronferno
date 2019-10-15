@@ -20,41 +20,20 @@
     <script type="text/javascript">
         // This will be called by the admin adapter when the settings page loads
         function load(settings, onChange) {
-            // example: select elements with id=key and class=value and insert value
             if (!settings) return;
-            $('.value').each(function () {
-                var $key = $(this);
-                var id = $key.attr('id');
-                if ($key.attr('type') === 'checkbox') {
-                    // do not call onChange direct, because onChange could expect some arguments
-                    $key.prop('checked', settings[id])
-                        .on('change', () => onChange())
-                        ;
-                } else {
-                    // do not call onChange direct, because onChange could expect some arguments
-                    $key.val(settings[id])
-                        .on('change', () => onChange())
-                        .on('keyup', () => onChange())
-                        ;
-                }
-            });
+
+            devices = settings.devices || [];
+            values2table("devices", devices,onChange);
             onChange(false);
+
             // reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
             if (M) M.updateTextFields();
         }
 
         // This will be called by the admin adapter when the user presses the save button
         function save(callback) {
-            // example: select elements with class=value and build settings object
-            var obj = {};
-            $('.value').each(function () {
-                var $this = $(this);
-                if ($this.attr('type') === 'checkbox') {
-                    obj[$this.attr('id')] = $this.prop('checked');
-                } else {
-                    obj[$this.attr('id')] = $this.val();
-                }
-            });
+            var obj = {devices:[]};
+            obj.devices = table2values("devices");
             callback(obj);
         }
     </script>
@@ -72,17 +51,32 @@
         </div>
 
         <!-- Put your content here -->
-
-        <!-- For example columns with settings: -->
-        <div class="row">
-            <div class="col s6 input-field">
-                <input type="checkbox" class="value" id="option1" />
-                <label for="option1" class="translate">option1</label>
+        <div class="section">
+            <div class="row">
+                <div class="col s12">
+                    <h6 class="translate sub-title">Tronferno Devices</h6>
+                </div>
             </div>
-
-            <div class="col s6 input-field">
-                <input type="text" class="value" id="option2" />
-                <label for="option2" class="translate">option2</label>
+            
+            <div class="row" id="devices">
+                <div class="col s2">
+                    <a class="table-button-add btn-floating waves-effect waves-light"><i class="material-icons">add</i></a>
+                </div>
+                <div class="col s12">
+                    <table class="table-values highlight">
+                        <thead>
+                        <tr>
+                            <th data-name="_index"></th>
+                            <th data-name="name"    class="translate">Name</th>
+                            <th data-name="ip"      class="translate">IP</th>
+                            <th data-name="port"    class="translate" data-default="7777">Port</th>
+                            <th data-name="addr"      class="translate">Address</th>
+                            <th data-name="create"  class="translate" data-type="checkbox" data-default="true">(Re-)Create</th>
+                            <th data-buttons="delete"> </th>
+                        </tr>
+                        </thead>
+                    </table>
+            </div>
             </div>
         </div>
 

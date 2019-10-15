@@ -1,0 +1,30 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch tronferno with Admin Upload",
+            "runtimeArgs": ["--preserve-symlinks-main", "--preserve-symlinks"],
+            "cwd": "/opt/iobroker",
+            "program": "/opt/iobroker/node_modules/iobroker.tronferno/main.js",
+            "args": ["0", "--force","--logs"],
+            "stopOnEntry": true,
+            "preLaunchTask":  "Upload Adpater Files"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch tronferno",
+            "runtimeArgs": ["--preserve-symlinks-main", "--preserve-symlinks"],
+            "cwd": "/opt/iobroker",
+            "program": "/opt/iobroker/node_modules/iobroker.tronferno/main.js",
+            "args": ["0", "--force","--logs"],
+            "stopOnEntry": true,
+        }
+
+    ]
+}

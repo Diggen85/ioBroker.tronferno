@@ -14,9 +14,9 @@ systemDictionary = {
         "pl": "Ustawienia adaptera dla tronferno",
         "zh-cn": "tronferno的适配器设置"
     },
-    "option1": {
-        "en": "option1",
-        "de": "Option 1",
+    "create": {
+        "en": "(Re-)Create",
+        "de": "(Neu)Anlegen",
         "ru": "Опция 1",
         "pt": "Opção 1",
         "nl": "Optie 1",
@@ -25,17 +25,5 @@ systemDictionary = {
         "es": "Opción 1",
         "pl": "opcja 1",
         "zh-cn": "选项1"
-    },
-    "option2": {
-        "en": "option2",
-        "de": "Option 2",
-        "ru": "option2",
-        "pt": "opção 2",
-        "nl": "Optie 2",
-        "fr": "Option 2",
-        "it": "opzione 2",
-        "es": "opcion 2",
-        "pl": "Opcja 2",
-        "zh-cn": "选项2"
     }
 };

@@ -28,6 +28,67 @@ class Tronferno extends utils.Adapter {
         this.on("unload", this.onUnload.bind(this));
     }
 
+    async _createDeviceFromConfig(deviceId, device) {
+        const nativeTemplate = {
+            "ip":     device.ip,
+            "port":   device.port,
+            "addr":   device.addr,
+            "group": 0,
+            "motor": 0
+        };
+        const deviceTemplate = {
+            "name":   device.name,
+            "role":   "blind",
+            "desc":   "Tronferno device"
+        };
+        await this.createDeviceAsync(deviceId, deviceTemplate, nativeTemplate);
+        // Make all 7 Groups and 7 Motors for Device
+        // TODO: Special Group 0 and Motors 0 to address all Groups / Motors in Group
+        for (let g=1;g<8;g++){
+            nativeTemplate.group = g;
+            nativeTemplate.motor = 0; // reset to 0 for every iretation
+            const groupTemplate = { 
+                "name":  "Group " + g,      // mandatory, default _id ??
+                "role":  "blind",            // optional   default undefined
+                "desc":  "Gorup " + g       // optional,  default undefined
+            };
+            const channelName = "group" + g.toString();
+            await this.createChannelAsync(deviceId, channelName, groupTemplate,nativeTemplate);
+            for (let m=1; m<8;m++) {
+                nativeTemplate.motor = m;
+                const stateTemplate = {
+                    "name":  "Motor "+m,         // mandatory, default _id ??
+                    "def":   0,                      // optional,  default 0
+                    "type":  "number",               // optional,  default "number"
+                    "read":  true,                   // mandatory, default true
+                    "write": true,                   // mandatory, default true
+                    "min":   0,                      // optional,  default 0
+                    "max":   100,                    // optional,  default 100
+                    "unit":  "%",                    // optional,  default %
+                    "role":  "level.blind",          // mandatory
+                    "desc":  "Motor " + m + "level"  // optional,  default undefined
+                };
+                const motorName = "level" + m.toString();
+                await this.createStateAsync(deviceId, channelName, motorName, stateTemplate, nativeTemplate);
+            }
+        }
+        // Create Connected State for Device
+        await this.setObjectAsync(deviceId + ".connected",{
+            "type": "state",
+            "common": {
+                "name": "Info about connection to device",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "role": "info."
+            },
+            "native":{
+                "ip":     device.ip,
+                "port":   device.port
+            }
+        });
+    }
+
     /**
      * Is called when databases are connected and adapter received configuration.
      */
@@ -36,14 +97,13 @@ class Tronferno extends utils.Adapter {
 
         // The adapters config (in the instance object everything under the attribute "native") is accessible via
         // this.config:
-        this.log.info("config option1: " + this.config.option1);
-        this.log.info("config option2: " + this.config.option2);
+        //this.log.info("config option1: " + this.config.devices);
 
         /*
         For every state in the system there has to be also an object of type state
         Here a simple template for a boolean variable named "testVariable"
         Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
-        */
+        
         await this.setObjectAsync("testVariable", {
             type: "state",
             common: {
@@ -55,30 +115,45 @@ class Tronferno extends utils.Adapter {
             },
             native: {},
         });
-
+        */
         // in this template all states changes inside the adapters namespace are subscribed
-        this.subscribeStates("*");
-
+        //this.subscribeStates("*");
         /*
         setState examples
         you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
         */
         // the variable testVariable is set to true as command (ack=false)
-        await this.setStateAsync("testVariable", true);
+        //await this.setStateAsync("testVariable", true);
+        
+        let saveConfig = false; // Flag if Config save is needed
 
-        // same thing, but the value is flagged "ack"
-        // ack should be always set to true if the value is received from or acknowledged from the target system
-        await this.setStateAsync("testVariable", { val: true, ack: true });
+        this.log.info("config: " + this.config)
+        // No Devices in Config -> Nothing to do -> disable Adapter
+        /* if (this.config.devices === undefined) {
+            this.disable();
+            return;
+        }*/
+        
+        // Create flaged Devices in Config
+        this.config.devices.forEach( (device, idx) => {
+            if (device.create) {
+                this.log.info("Create Device " + device.name);
+                this._createDeviceFromConfig("Device" + idx, device);
+                // disable create in config array
+                this.config.devices[idx].create = false;
+                saveConfig = true;
+            }
+        });
 
-        // same thing, but the state is deleted after 30s (getState will return null afterwards)
-        await this.setStateAsync("testVariable", { val: true, ack: true, expire: 30 });
+        // if modified save config and restart
+        if (saveConfig) {
+            this.updateConfig(this.config);
+            return;
+        }
 
-        // examples for the checkPassword/checkGroup functions
-        let result = await this.checkPasswordAsync("admin", "iobroker");
-        this.log.info("check user admin pw ioboker: " + result);
+        this.subscribeForeignStates("*.level*");
 
-        result = await this.checkGroupAsync("admin", "admin");
-        this.log.info("check group user admin group admin: " + result);
+
     }
 
     /**
