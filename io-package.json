@@ -68,7 +68,7 @@
         ]
     },
     "native": {
-        "devices": [{"name":"","ip":"","port":"", "addr":"","create":false}]
+        "devices": []
     },
     "objects": [],
     "instanceObjects": []
