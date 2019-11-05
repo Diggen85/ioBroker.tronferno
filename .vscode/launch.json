@@ -7,6 +7,17 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Launch test-modul.js",
+            "runtimeArgs": ["--preserve-symlinks-main", "--preserve-symlinks"],
+            "cwd": "/opt/iobroker",
+            "program": "/opt/iobroker/node_modules/iobroker.tronferno/test-modul.js",
+            "args": ["0", "--force","--logs"],
+            "stopOnEntry": true,
+        },
+
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch tronferno with Admin Upload",
             "runtimeArgs": ["--preserve-symlinks-main", "--preserve-symlinks"],
             "cwd": "/opt/iobroker",

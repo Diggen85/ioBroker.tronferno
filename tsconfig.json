@@ -23,6 +23,6 @@
 		// Fix enquirer typings
 		"typeRoots": ["./node_modules/@types", "./src/@types/"]
 	},
-	"include": ["**/*.ts"],
+	//"include": ["**/*.ts"],
 	"exclude": ["build/**", "node_modules/**", "test/baselines/**"]
 }
