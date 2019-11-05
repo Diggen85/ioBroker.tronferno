@@ -21,9 +21,9 @@ server.on("error", (error) => {
 });
 
 // tronferno 
-const tronfernoDev = require("./lib/tronfernoDev");
+const TronfernoDev = require("./lib/tronfernoDev");
 
-const dev = new tronfernoDev("123456", "192.168.178.51:7777");
+const dev = new TronfernoDev("123456", "192.168.178.51:7777");
 dev.on("error", (error) => {
     console.info(error);
 });
@@ -43,3 +43,4 @@ dev.connect();
 function newFunction() {
     console.log("dev connected ? - " + dev.isConnected);
 }
+
