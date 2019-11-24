@@ -69,7 +69,7 @@ class Tronferno extends utils.Adapter {
                     "type":  "number",               // optional,  default "number"
                     "read":  true,                   // mandatory, default true
                     "write": true,                   // mandatory, default true
-                    "min":   0,                      // optional,  default 0
+                    "min":   -1,                      // optional,  default 0 // dirty hack for stop
                     "max":   100,                    // optional,  default 100
                     "unit":  "%",                    // optional,  default %
                     "role":  "level.blind",          // mandatory
@@ -119,6 +119,8 @@ class Tronferno extends utils.Adapter {
             cmd="sun-down";
         } else if (val > 50) {
             cmd="up";
+        } else if (val == -1) { //dirty Hack for stop
+            cmd="stop";
         } else return false;
         const tronfernoCmd = "send a="+addr+" g="+group+" m="+motor+" c="+cmd+";";
 
@@ -301,9 +303,39 @@ class Tronferno extends utils.Adapter {
                 }
             }
         } else { // it is a levelX state  //TODO: Check if its level
-            // The state was changed -> send cmd and set ack         
+            // The state was changed -> send cmd and set ack  
+            if (id.includes("moving")) {
+                this.log.info(id + " triggered - do nothing");
+                return;
+            }
+
             const cmdAck = await this._sendCommand(obj.native.deviceId, obj.native.addr, obj.native.group, obj.native.motor, state.val);
-            if (cmdAck) {
+            if (cmdAck) {         
+                //dirty hack for stop 
+                const parentId = id.substr(0,id.lastIndexOf("."));
+                const movingObjName = "moving"+ obj.native.motor;              
+                const movingObjId = parentId + "." + movingObjName;
+                if (state.val == -1) {  
+                    // if cmd stop -> set moving false
+                    this.setState(movingObjId, {val: null}, true);
+                    
+                } else {
+                    //If not stop cmd -> create moving state and let expire... in 25sec
+                    const stateObjTemplate = {
+                        "type": "state",
+                        "common": {
+                            "name":  movingObjName,              // mandatory, default _id ??
+                            "def":   false,                      // optional,  default 0
+                            "type":  "boolean",              // optional,  default "number"
+                            "read":  true,                   // mandatory, default true
+                            "write": false,                  // mandatory, default true
+                            "role":  "indicator.working",        // mandatory
+                            "desc":  "is Blind moving"       // optional,  default undefined
+                        },                   
+                    };
+                    await this.setObjectNotExistsAsync(movingObjId, stateObjTemplate);
+                    this.setState(movingObjId ,{val: true, expire: 25}, true); //await? not really
+                }
                 this.setState(id,state,true);
                 this.log.info(`state ${id} acknowledged`);
             } else {
